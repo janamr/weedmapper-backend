@@ -1,5 +1,6 @@
 const express = require("express");
 
+const User = require('./../models/user-model');
 const PlantPin = require("../models/plant-pin-model.js");
 
 const router = express.Router();
@@ -22,8 +23,6 @@ router.post("/process-plantPin",
     }
 
     const { name, description, imageUrl, latitude, longitude } = req.body;
-    // create the geoJSON structure for our lat and long
-    // const location = { coordinates: [ latitude, longitude ] };
 
     PlantPin.create({
       owner: req.user._id,
@@ -33,42 +32,27 @@ router.post("/process-plantPin",
       latitude,
       longitude
     })
-    .then((plantPinDoc) => {
-      res.json("plantPinDoc");
+    .then((plantPinsDoc) => {
+      console.log(req.user);
+      console.log(plantPinsDoc);
+      User.update(
+        { _id: req.user._id },
+        { $push: { userPins: plantPinsDoc._id}}
+      )
+      .then(() =>{
+        res.json(plantPinsDoc);
+      })
     })
     .catch((err) => {
       next(err);
     })
   });
 
-// router.get("/my-rooms", (req, res, next) => {
-//   if (!req.user) {
-//     // "req.flash()" is defined by the "connect-flash" package
-//     req.flash("error", "You must be logged in.");
-//     // redirect away if you aren't logged in (authorization!)
-//     res.redirect("/login");
-//     return;
-//   }
-
-//   Room.find({ owner: req.user._id })
-//     .then((roomResults) => {
-//       res.locals.roomArray = roomResults;
-//       res.render("room-views/room-list.hbs");
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// });
-
-
-// module.exports = router;
-
-
 // ---------//-----------//-------------//-------------//
 
-router.get("/plantPins", (req, res, next) => {
+router.get("/userPins", (req, res, next) => {
   PlantPin
-  .find()
+  .find({ owner: req.user._id })
   .sort({ createdAt: -1 })
   .then((plantPinResults) => {
     res.json(plantPinResults);
@@ -78,14 +62,12 @@ router.get("/plantPins", (req, res, next) => {
   });
 });
 
-router.post("/plantPins", (req, res, next) => {
-  const { location, name, image, details } = req.body;
-
-  PlantPin.create({ location, name, image, details })
-  .then((plantPinsDoc) => {
-    // res.locals.plantPinsArray = plantPinsDoc;
-    res.render("plant-views/plant-list.hbs")
-    res.json(plantPinsDoc)
+router.get("/allPins", (req, res, next) => {
+  PlantPin
+  .find()
+  .sort({ createdAt: -1 })
+  .then((plantPinResults) => {
+    res.json(plantPinResults);
   })
   .catch((err) => {
     next(err);
@@ -110,23 +92,7 @@ router.get("/plantPin/:id", (req, res, next) => {
   });
 });
 
-router.put("/plantPin/:id", (req, res, next) => {
-  const { id } = req.params;
-  const { location, name, image, details } = req.body;
-
-  PlantPin.findByIdAndUpdate(
-    id,
-    { $set: { location, name, image, details } },
-    // "new" gets us the updated version of the document
-    { runValidators: true, new: true }
-  )
-  .then((plantPinDoc) => {
-    res.json(plantPinDoc);
-  })
-  .catch((err) => {
-    next(err);
-  });
-});
+//----------//----------//----------//---------//
 
 router.delete("/plantPin/:id", (req, res, next) => {
   const { id } = req.params;
