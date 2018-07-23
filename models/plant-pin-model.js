@@ -17,7 +17,7 @@ const plantPinSchema = new Schema({
     startDate: String,
     stopDate: String
   },
-  details: { type: [ String ] }
+  details: { type: String }
 }, {
   timestamps: true
 });

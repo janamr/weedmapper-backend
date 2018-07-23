@@ -16,12 +16,13 @@ const userSchema = new Schema({
     { type: Schema.Types.ObjectId, ref: 'Comments' }
   ],
   userPins: [
-    { type: Schema.Types.ObjectId, ref: 'Comments' }
+    { type: Schema.Types.ObjectId, ref: 'PlantPin' }
+  ],
+  userFavorites: [
+    { type: Schema.Types.ObjectId, ref: 'PlantPin' }
   ],
   imageUrl: { type: String },
   description: { type: String },
-  userFavorites: { type: String }
-
 
 }, {
   timestamps: true

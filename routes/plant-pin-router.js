@@ -34,7 +34,7 @@ router.post("/process-plantPin",
       longitude
     })
     .then((plantPinDoc) => {
-      res.redirect("plantPinDoc");
+      res.json("plantPinDoc");
     })
     .catch((err) => {
       next(err);
