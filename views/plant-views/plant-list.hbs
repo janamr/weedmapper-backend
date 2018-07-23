@@ -1,0 +1,13 @@
+<h2>Plants list</h2>
+
+<ul>
+  {{#each plantPinArray}}
+    <li>
+      <h3>{{this.name}}</h3>
+      <img src="{{this.pictureUrl}}" />
+    </li>
+  {{else}}
+    <p>You have no plants yet!</p>
+    <a href="/plantPin/add">Add a Plant</a>
+  {{/each}}
+</ul>

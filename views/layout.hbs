@@ -5,9 +5,37 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
+    <header>
+      <h1>Weedmapper</h1>
+
+      <nav>
+        <a href="/">Home</a>
+        {{#if blahUser}}
+          <strong>{{blahUser.email}}</strong>
+          <a href="/my-adds">My Contributions</a>
+          <a href="/favorites">My Favorites</a>
+
+          <a href="/plantPin/add">Add a Weed</a>
+          <a href="/settings">User Settings</a>
+          <a href="/logout">Log Out</a>
+        {{else}}
+          <a href="/signup">Sign Up</a>
+          <a href="/login">Log In</a>
+        {{/if}}
+
+        {{!-- if logged in --}}
+      </nav>
+    </header>
 
     {{{body}}}
 
+    <footer>
+      <p>Made with 🔮 at Ironhack</p>
+    </footer>
+
     <script src='/javascripts/script.js'></script>
+    <script src='http://maps.googleapis.com/maps/api/js'></script>
+
+
   </body>
 </html>

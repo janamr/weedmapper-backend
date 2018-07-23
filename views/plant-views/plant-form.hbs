@@ -1,0 +1,36 @@
+<h2>Add a Plant</h2>
+
+<!-- always method="POST" & enctype="multipart/form-data" for file uploads -->
+<form method="POST" action="/process-plantPin" >
+  <label>
+    Name:
+    <input type="text" name="name" placeholder="name of plant" />
+  </label>
+  <br />
+
+  <label>
+    Description:
+    <input type="text" name="description" placeholder="leafy green and what else?" />
+  </label>
+  <br />
+
+  <label>
+    Picture:
+    <input type="text" name="imageUrl" placeholder="paste image URL" />
+  </label>
+  <br />
+
+  <label>
+    Latitude:
+    <input type="text" name="latitude" placeholder="00.0000" />
+  </label>
+  <br />
+
+    <label>
+    Longitude:
+    <input type="text" name="longitude" placeholder="00.0000" />
+  </label>
+  <br />
+
+  <button>Post this plant</button>
+</form>

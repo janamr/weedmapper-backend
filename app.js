@@ -8,7 +8,11 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const cors         = require('cors');
+const session      = require('express-session');
+const MongoStore   = require('connect-mongo')(session);
 
+const passportSetup = require("./passport/setup.js")
 
 mongoose.Promise = Promise;
 mongoose
@@ -29,6 +33,25 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// allow cross origin resource sharing (API requests from other domains)
+app.use(cors({
+  // receive cookies from other domains
+  credentials: true,
+  // these are the domains I want cookies from
+  origin: ["http://localhost:4200"]
+}));
+// session setup hsould coem after the CORS setup
+app.use(session({
+  secret: "blah",
+  saveUninitialized: true,
+  resave: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
+}));
+
+// Passport setup should come after session setup
+passportSetup(app);
 
 // Express View engine setup
 
@@ -37,7 +60,7 @@ app.use(require('node-sass-middleware')({
   dest: path.join(__dirname, 'public'),
   sourceMap: true
 }));
-      
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -53,6 +76,12 @@ app.locals.title = 'Express - Generated with IronGenerator';
 
 const index = require('./routes/index');
 app.use('/', index);
+
+const plantPinRouter = require("./routes/plant-pin-router.js");
+app.use("/", plantPinRouter);
+
+const authRouter = require("./routes/auth-router.js");
+app.use("/", authRouter);
 
 
 module.exports = app;
