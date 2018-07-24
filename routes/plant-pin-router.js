@@ -74,6 +74,38 @@ router.get("/allPins", (req, res, next) => {
   });
 });
 
+router.get("/user-favorites", (req, res, next) => {
+  User.findById(req.user._id)
+  .populate("userFavorites")
+  .then((user) => {
+    res.json(user.userFavorites);
+  })
+  .catch((err) => {
+    next(err);
+  });
+});
+
+router.post("/process-favorites", (req, res, next) => {
+
+    const id = req.body.id;
+
+    console.log('REQ BODY========================');
+    console.log(req.body);
+    console.log('ID========================');
+    console.log(id);
+
+    User.update(
+      { _id: req.user._id },
+      { $push: { userFavorites: id }}
+    )
+    .then((user) =>{
+      res.json(user);
+    })
+    .catch((err) => {
+      next(err);
+    })
+  });
+
 router.get("/plantPin/:id", (req, res, next) => {
   const { id } = req.params;
 
