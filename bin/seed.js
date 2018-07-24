@@ -10,7 +10,7 @@ const User = require("../models/user-model.js");
 // this same chunk is in app.js
 mongoose.Promise = Promise;
 mongoose // make sure to connect to same DB as in app.js
-  .connect('mongodb://localhost/weedmapper-backend', {useMongoClient: true})
+  .connect(process.env.MONGODB_URI, {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {
