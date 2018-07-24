@@ -17,7 +17,8 @@ const plantPinSchema = new Schema({
     startDate: String,
     stopDate: String
   },
-  details: { type: String }
+  description: { type: String },
+  draggable: { type: Boolean, default: false }
 }, {
   timestamps: true
 });
