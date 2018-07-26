@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const commentsSchema = new Schema({
-  userPhoto: { type: String, required: true },
-  userName: { type: String, required: true },
+  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  plantPin: { type: Schema.Types.ObjectId, ref: "PlantPin", required: true },
   userComment: { type: String, required: true },
 }, {
   timestamps: true

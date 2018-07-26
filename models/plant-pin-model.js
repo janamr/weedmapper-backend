@@ -18,6 +18,9 @@ const plantPinSchema = new Schema({
     stopDate: String
   },
   description: { type: String },
+  userComments: [
+    { type: Schema.Types.ObjectId, ref: 'Comments' }
+  ],
   draggable: { type: Boolean, default: false }
 }, {
   timestamps: true

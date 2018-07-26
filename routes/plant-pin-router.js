@@ -2,6 +2,7 @@ const express = require("express");
 
 const User = require('./../models/user-model');
 const PlantPin = require("../models/plant-pin-model.js");
+const Comments = require("../models/comments-model.js");
 
 const router = express.Router();
 
@@ -117,25 +118,47 @@ router.post("/process-favorites", (req, res, next) => {
     });
   });
 
+  router.get("/plant-comments", (req, res, next) => {
+    PlantPin.findById(req.user._id)
+    .populate("userComments")
+    .then((plant) => {
+      res.json(plant.userComments);
+    })
+    .catch((err) => {
+      next(err);
+    });
+  });
+
   router.post("/process-comments", (req, res, next) => {
 
-      const id = req.body.id;
+      const { plantPin, userComment } = req.body;
 
       console.log('REQ BODY========================');
       console.log(req.body);
       console.log('ID========================');
-      console.log(id);
+      console.log(plantPin);
 
-      User.update(
-        { _id: req.user._id },
-        { $push: { userComments: id }}
-      )
-      .then((user) =>{
-        res.json(user);
-      })
-      .catch((err) => {
-        next(err);
-      })
+      Comments.create({ plantPin, userComment, user: req.user._id })
+        .then((commentDoc) => {
+
+          return User.findByIdAndUpdate(
+            req.user._id,
+            { $push: { userComments: commentDoc._id }},
+            { new: true }
+          )
+          .then((user) =>{
+            return PlantPin.findByIdAndUpdate(
+              plantPin,
+              { $push: { userComments: commentDoc._id }}
+            )
+            .then(() => {
+              res.json(user);
+            });
+          });
+        })
+        .catch((err) => {
+          next(err);
+        });
     });
 
 router.get("/plantPin/:id", (req, res, next) => {
