@@ -106,6 +106,38 @@ router.post("/process-favorites", (req, res, next) => {
     })
   });
 
+  router.get("/user-comments", (req, res, next) => {
+    User.findById(req.user._id)
+    .populate("userComments")
+    .then((user) => {
+      res.json(user.userComments);
+    })
+    .catch((err) => {
+      next(err);
+    });
+  });
+
+  router.post("/process-comments", (req, res, next) => {
+
+      const id = req.body.id;
+
+      console.log('REQ BODY========================');
+      console.log(req.body);
+      console.log('ID========================');
+      console.log(id);
+
+      User.update(
+        { _id: req.user._id },
+        { $push: { userComments: id }}
+      )
+      .then((user) =>{
+        res.json(user);
+      })
+      .catch((err) => {
+        next(err);
+      })
+    });
+
 router.get("/plantPin/:id", (req, res, next) => {
   const { id } = req.params;
 

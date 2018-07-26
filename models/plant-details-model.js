@@ -8,7 +8,7 @@ const plantDetailsSchema = new Schema({
   images: [
     { type: String, required: true }
   ],
-  details: { type: [ String ] },
+  description: { type: String },
   userComments: [
     { type: Schema.Types.ObjectId, ref: 'Comments' }
   ]
