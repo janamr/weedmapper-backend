@@ -118,9 +118,17 @@ router.post("/process-favorites", (req, res, next) => {
     });
   });
 
-  router.get("/plant-comments", (req, res, next) => {
-    PlantPin.findById(req.user._id)
-    .populate("userComments")
+  router.get("/plant-comments/:clickedPlantPinId", (req, res, next) => {
+    PlantPin.findById(req.params.clickedPlantPinId)
+    .populate("plantPin")
+    .populate({
+      path: 'userComments',
+      populate: { path: 'user'}
+      })
+      .populate({
+        path: 'userComments',
+        populate: { path: 'plantPin'}
+        })
     .then((plant) => {
       res.json(plant.userComments);
     })
